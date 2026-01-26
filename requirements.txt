@@ -1,0 +1,18 @@
+# --- Core AI & Orchestration ---
+langchain>=0.3.0
+langchain-groq
+langchain-huggingface
+langchain-community
+langchain-core
+langchain-text-splitters
+
+# --- Document Processing & Vector Store ---
+pypdf
+faiss-cpu
+sentence-transformers
+
+# --- Frontend & Environment ---
+streamlit
+python-dotenv
+pydantic
+pandas
