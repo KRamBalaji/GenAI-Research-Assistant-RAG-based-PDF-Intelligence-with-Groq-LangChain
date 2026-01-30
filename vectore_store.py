@@ -1,29 +1,29 @@
-import os
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document 
+from models import ResearchPaper
 
-def index_papers(papers_list, folder_path="faiss_index"):
-    """FAISS-based vector index (cite: 248)."""
-    # This model is free and runs on your CPU
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    
-    all_chunks = []
-    for paper in papers_list:
-        chunks = text_splitter.create_documents(
-            [s.content for s in paper.sections],
-            metadatas=[{"title": paper.title, "paper_id": paper.paper_id} for _ in paper.sections]
+
+def create_vector_store(paper: ResearchPaper):
+    """
+    Converts a ResearchPaper object into a FAISS vector store.
+    """
+    documents = []
+    for section in paper.sections:
+        # We wrap your paper sections into standard LangChain Document objects
+        doc = Document(
+            page_content=section.content,
+            metadata={
+                "section": section.section_title,
+                "page": section.page_number
+            }
         )
-        all_chunks.extend(chunks)
+        documents.append(doc)
     
-    vectorstore = FAISS.from_documents(all_chunks, embeddings)
-    vectorstore.save_local(folder_path)
-    return vectorstore
-
-def load_vector_db():
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    if os.path.exists("faiss_index"):
-        return FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
-    return None
+    # Initialize the Embedding Model (lightweight and runs on CPU)
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    
+    # Create the FAISS index
+    vector_store = FAISS.from_documents(documents, embeddings)
+    
+    return vector_store

@@ -1,4 +1,5 @@
 import os
+import re
 from langchain_community.document_loaders import PyPDFLoader
 from models import ResearchPaper, PaperSection
 
@@ -30,3 +31,17 @@ def parse_paper_to_sections(pdf_path: str) -> ResearchPaper:
         abstract="See Full Document",
         sections=sections
     )
+
+def extract_references(text):
+    """
+    Naive regex to extract lines looking like citations [1] Author...
+    """
+    # Look for the References header
+    ref_split = re.split(r'(?i)\n\s*references\s*\n', text)
+    if len(ref_split) < 2:
+        return []
+    
+    ref_text = ref_split[-1]
+    # Find patterns like [1], 1., (Author, Year)
+    citations = re.findall(r'\[\d+\]\s.*?(?=\[\d+\]|$)', ref_text, re.DOTALL)
+    return [c.strip().replace('\n', ' ') for c in citations[:20]] # Limit to top 20
