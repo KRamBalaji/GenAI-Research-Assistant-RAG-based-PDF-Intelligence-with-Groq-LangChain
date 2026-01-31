@@ -1,18 +1,24 @@
 # --- Core AI & Orchestration ---
-langchain>=0.3.0
+langchain
 langchain-groq
 langchain-huggingface
 langchain-community
 langchain-core
-langchain-text-splitters
 
 # --- Document Processing & Vector Store ---
 pypdf
 faiss-cpu
 sentence-transformers
 
-# --- Frontend & Environment ---
+# UI and Dashboard
 streamlit
-python-dotenv
-pydantic
 pandas
+plotly
+graphviz
+
+# Data Modeling and Environment
+pydantic
+python-dotenv
+
+#Search and Tools
+tavily-python
