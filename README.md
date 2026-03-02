@@ -116,3 +116,5 @@ streamlit run app.py
 * **Minimalist Dashboard:** The UI focuses on high data-ink ratios—using thin lines and neutral colors in Graphviz and Plotly to maintain professional clarity.
 
 * **Adjacency List:** Chosen for simplicity; allows for $O(1)$ lookup of citation neighbors without the overhead of a dedicated graph DB.
+
+## **Live Link -** https://genai-research-assistant-rag-based-pdf-intelligence-with-groq.streamlit.app/
